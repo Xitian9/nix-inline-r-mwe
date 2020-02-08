@@ -1,0 +1,22 @@
+name: nix-mwe
+
+extra-source-files:
+- package.yaml
+
+library:
+  dependencies:
+  - base
+  - inline-r >=0.9 && <0.11
+  pkg-config-dependencies:
+  - libR >3.0
+  system-build-tools:
+  - pkg-config
+  source-dirs: library
+
+executables:
+  nix-mwe:
+    source-dirs: executable
+    main: Main.hs
+    dependencies:
+    - base
+    - nix-mwe
