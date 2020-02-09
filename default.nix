@@ -6,6 +6,7 @@ let
 
     haskellPackages = super.haskellPackages.override {
       overrides = hself: hsuper: {
+
         nix-mwe = self.haskell.lib.overrideCabal (hself.callCabal2nix "nix-mwe" ./. {}) (oldAttrs: {
           buildTools = oldAttrs.buildTools or [] ++ [ self.makeWrapper ];
           postInstall = oldAttrs.postInstall or "" + ''
@@ -13,9 +14,11 @@ let
           '';
         });
 
-        inline-r = self.haskell.lib.overrideCabal hsuper.inline-r (oldAttrs: {
-          buildDepends = (oldAttrs.buildDepends or []) ++ [ self.R ];
-        });
+        inline-r = self.haskell.lib.dontCheck (
+          self.haskell.lib.overrideCabal hsuper.inline-r (oldAttrs: {
+            buildDepends = (oldAttrs.buildDepends or []) ++ [ self.my-R ];
+          })
+        );
       };
     };
   };
@@ -30,4 +33,4 @@ let
   pkgs = import nixpkgsSrc { overlays = [ thisOverlay ]; };
 in
 
-pkgs.haskellPackages.nix-mwe
+  pkgs.haskellPackages.nix-mwe
