@@ -11,6 +11,7 @@ let
           buildTools = oldAttrs.buildTools or [] ++ [ self.makeWrapper ];
           postInstall = oldAttrs.postInstall or "" + ''
             wrapProgram $out/bin/nix-mwe \
+              --prefix 'PATH' ':' "${self.lib.getBin self.my-R}/bin" \
               --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.dplyr}/library" \
               --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.R6}/library" \
               --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.Rcpp}/library" \
