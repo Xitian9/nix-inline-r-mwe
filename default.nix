@@ -10,7 +10,21 @@ let
         nix-mwe = self.haskell.lib.overrideCabal (hself.callCabal2nix "nix-mwe" ./. {}) (oldAttrs: {
           buildTools = oldAttrs.buildTools or [] ++ [ self.makeWrapper ];
           postInstall = oldAttrs.postInstall or "" + ''
-            wrapProgram $out/bin/nix-mwe --prefix 'PATH' ':' "${self.lib.getBin self.my-R}/bin"
+            wrapProgram $out/bin/nix-mwe \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.dplyr}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.R6}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.Rcpp}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.assertthat}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.glue}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.magrittr}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.pkgconfig}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.tibble}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.pillar}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.crayon}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.vctrs}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.tidyselect}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.purrr}/library" \
+              --prefix 'R_LIBS_SITE' ':' "${self.lib.getLib self.rPackages.rlang}/library"
           '';
         });
 
